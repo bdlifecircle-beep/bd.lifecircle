@@ -12,3 +12,10 @@ services:
         generateValue: true
       - key: ADMIN_SECRET_CODE
         sync: false
+      - key: APP_URL
+        sync: false
+      - key: GOOGLE_SITE_VERIFICATION
+        sync: false
+      - key: GOOGLE_SITE_VERIFICATION_FILE
+        sync: false
+

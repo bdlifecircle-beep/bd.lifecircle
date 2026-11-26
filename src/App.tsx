@@ -172,6 +172,100 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Sync page-level SEO, canonical URL, and Open Graph tags dynamically
+  useEffect(() => {
+    const pageMeta: Record<PageRoute, { title: string; description: string }> = {
+      home: {
+        title: 'lifecircle.bd — মেডিকেল যন্ত্রপাতি ও স্লিপ টেস্ট',
+        description:
+          'বাংলাদেশের নির্ভরযোগ্য মেডিকেল যন্ত্রপাতি, স্লিপ টেস্ট, রোগ বিষয়ক নির্দেশিকা, সরকারি হাসপাতাল ডিরেক্টরি ও গুগল ড্রাইভ ব্যাকআপ সমৃদ্ধ স্বাস্থ্যসেবা প্ল্যাটফর্ম।',
+      },
+      products: {
+        title: 'মেডিকেল যন্ত্রপাতি — lifecircle.bd',
+        description:
+          'বিপি মেশিন, ডায়াবেটিস মিটার, অক্সিজেন কনসেন্ট্রেটর, বাইপ্যাপ ও সিপ্যাপ সহ প্রয়োজনীয় মেডিকেল যন্ত্রপাতির তালিকা।',
+      },
+      'sleep-test': {
+        title: 'হোম ও ক্লিনিক স্লিপ টেস্ট — lifecircle.bd',
+        description:
+          'ঘরে বসে বা ক্লিনিকে নিরাপদ স্লিপ অ্যাপনিয়া ও ঘুমের পরীক্ষা এবং সিপ্যাপ/বাইপ্যাপ সেটআপ সেবা।',
+      },
+      diseases: {
+        title: 'রোগ ও স্বাস্থ্য নির্দেশিকা — lifecircle.bd',
+        description:
+          'ডায়াবেটিস, উচ্চ রক্তচাপ, স্লিপ অ্যাপনিয়া ও শ্বাসকষ্টের লক্ষণ, প্রাথমিক করণীয় ও সঠিক যন্ত্রপাতি ব্যবহারের নির্দেশিকা।',
+      },
+      hospitals: {
+        title: 'সরকারি ও স্বায়ত্তশাসিত হাসপাতাল ডিরেক্টরি — lifecircle.bd',
+        description:
+          'বাংলাদেশের বিভাগভিত্তিক সরকারি ও স্বায়ত্তশাসিত হাসপাতালের জরুরি ও সাধারণ যোগাযোগ নম্বর।',
+      },
+      appointments: {
+        title: 'অ্যাপয়েন্টমেন্ট বুকিং — lifecircle.bd',
+        description:
+          'স্লিপ টেস্ট বা মেডিকেল ডিভাইস ডেমো ও সেটআপের জন্য সহজ অনলাইন অ্যাপয়েন্টমেন্ট বুকিং।',
+      },
+      about: {
+        title: 'আমাদের সম্পর্কে — lifecircle.bd',
+        description:
+          'lifecircle.bd এর লক্ষ্য, মেডিকেল যন্ত্রপাতি সেবা ও রোগী-সহায়ক তথ্য প্ল্যাটফর্ম সম্পর্কে বিস্তারিত।',
+      },
+      faq: {
+        title: 'সচরাচর জিজ্ঞাসা (FAQ) — lifecircle.bd',
+        description:
+          'মেডিকেল যন্ত্রপাতি, স্লিপ টেস্ট, অ্যাপয়েন্টমেন্ট ও স্বাস্থ্যসেবা সংক্রান্ত সাধারণ প্রশ্নের উত্তর।',
+      },
+      contact: {
+        title: 'যোগাযোগ — lifecircle.bd',
+        description:
+          'lifecircle.bd হেল্পলাইন, হোয়াটসঅ্যাপ ও সরাসরি পরামর্শের জন্য যোগাযোগের ঠিকানা।',
+      },
+      dashboard: {
+        title: 'ইউজার ড্যাশবোর্ড — lifecircle.bd',
+        description:
+          'ব্যক্তিগত অ্যাপয়েন্টমেন্ট, অর্ডার ও গুগল ড্রাইভ ব্যাকআপ পরিচালনা করুন।',
+      },
+      admin: {
+        title: 'অ্যাডমিন প্যানেল — lifecircle.bd',
+        description: 'lifecircle.bd প্রশাসনিক ড্যাশবোর্ড।',
+      },
+    };
+
+    const meta = pageMeta[currentPage] || pageMeta.home;
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    const ogImageUrl = `${window.location.origin}/og-image.png`;
+
+    document.title = meta.title;
+
+    const setMetaTag = (attr: 'name' | 'property', key: string, value: string) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', value);
+    };
+
+    setMetaTag('name', 'description', meta.description);
+    setMetaTag('property', 'og:title', meta.title);
+    setMetaTag('property', 'og:description', meta.description);
+    setMetaTag('property', 'og:url', canonicalUrl);
+    setMetaTag('property', 'og:image', ogImageUrl);
+    setMetaTag('property', 'og:image:secure_url', ogImageUrl);
+    setMetaTag('name', 'twitter:title', meta.title);
+    setMetaTag('name', 'twitter:description', meta.description);
+    setMetaTag('name', 'twitter:image', ogImageUrl);
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', canonicalUrl);
+  }, [currentPage]);
+
   // Global Copy Protection & Secret Admin Shortcut (Ctrl+Shift+A / #admin)
   useEffect(() => {
     const isEditable = (target: EventTarget | null): boolean => {

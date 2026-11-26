@@ -23,6 +23,8 @@ export default defineConfig(() => {
           'pwa-512x512.png',
           'pwa-maskable-512x512.png',
           'lifecircle-logo.png',
+          'og-image.png',
+          'robots.txt',
         ],
         manifest: {
           id: '/',

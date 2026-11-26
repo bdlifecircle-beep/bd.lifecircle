@@ -98,10 +98,89 @@ function verifyAdminToken(authHeader: string | undefined): { identifier: string 
   }
 }
 
+function escapeHtmlAttr(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function resolvePublicBaseUrl(req: express.Request): string {
+  const configured = process.env.APP_URL?.trim();
+  if (configured && configured !== 'MY_APP_URL' && /^https?:\/\//i.test(configured)) {
+    return configured.replace(/\/+$/, '');
+  }
+  const forwardedProto = (req.headers['x-forwarded-proto'] as string | undefined)
+    ?.split(',')[0]
+    ?.trim();
+  const proto = forwardedProto || req.protocol || 'https';
+  const forwardedHost = (req.headers['x-forwarded-host'] as string | undefined)
+    ?.split(',')[0]
+    ?.trim();
+  const host = forwardedHost || req.get('host') || 'lifecircle.bd';
+  return `${proto}://${host}`.replace(/\/+$/, '');
+}
+
+function injectSeoMeta(html: string, req: express.Request): string {
+  const baseUrl = resolvePublicBaseUrl(req);
+  const safePath = req.path && req.path !== '/' ? req.path : '/';
+  const pageUrl = `${baseUrl}${safePath}`;
+
+  let result = html
+    .replace(/https:\/\/lifecircle\.bd\/og-image\.png/g, escapeHtmlAttr(`${baseUrl}/og-image.png`))
+    .replace(/https:\/\/lifecircle\.bd\/lifecircle-logo\.png/g, escapeHtmlAttr(`${baseUrl}/lifecircle-logo.png`))
+    .replace(/<link rel="canonical" href="https:\/\/lifecircle\.bd\/" \/>/g, `<link rel="canonical" href="${escapeHtmlAttr(pageUrl)}" />`)
+    .replace(/<meta property="og:url" content="https:\/\/lifecircle\.bd\/" \/>/g, `<meta property="og:url" content="${escapeHtmlAttr(pageUrl)}" />`)
+    .replace(/https:\/\/lifecircle\.bd\//g, escapeHtmlAttr(`${baseUrl}/`));
+
+  const gscToken = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  if (gscToken) {
+    result = result.replace(
+      'GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE',
+      escapeHtmlAttr(gscToken)
+    );
+  }
+  return result;
+}
+
 async function startServer() {
   const app = express();
+  app.set('trust proxy', 1);
   const httpServer = http.createServer(app);
   app.use(express.json({ limit: '1mb' }));
+
+  // Search engine discovery & Google Search Console verification endpoints
+  app.get('/robots.txt', (req, res) => {
+    const baseUrl = resolvePublicBaseUrl(req);
+    res
+      .type('text/plain')
+      .send(`User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${baseUrl}/sitemap.xml\n`);
+  });
+
+  app.get('/sitemap.xml', (req, res) => {
+    const baseUrl = escapeHtmlAttr(resolvePublicBaseUrl(req));
+    const lastmod = new Date().toISOString().split('T')[0];
+    res.type('application/xml').send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n` +
+        `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+        `  <url>\n` +
+        `    <loc>${baseUrl}/</loc>\n` +
+        `    <lastmod>${lastmod}</lastmod>\n` +
+        `    <changefreq>weekly</changefreq>\n` +
+        `    <priority>1.0</priority>\n` +
+        `  </url>\n` +
+        `</urlset>\n`
+    );
+  });
+
+  const gscFile = process.env.GOOGLE_SITE_VERIFICATION_FILE?.trim();
+  if (gscFile && /^google[a-zA-Z0-9_-]+\.html$/.test(gscFile)) {
+    app.get(`/${gscFile}`, (_req, res) => {
+      res.type('text/html').send(`google-site-verification: ${gscFile}`);
+    });
+  }
 
   // Check whether admin secret is configured via env or claimed in preview
   app.get('/api/admin/status', (_req, res) => {
@@ -239,15 +318,41 @@ async function startServer() {
       },
       appType: 'spa',
     });
+
+    app.get('*', async (req, res, next) => {
+      const accept = req.headers.accept || '';
+      const isAssetOrInternal =
+        req.path.startsWith('/api/') ||
+        req.path.startsWith('/@') ||
+        req.path.startsWith('/src/') ||
+        req.path.startsWith('/node_modules/') ||
+        /\.[a-zA-Z0-9]+$/.test(req.path);
+      if (isAssetOrInternal || !accept.includes('text/html')) {
+        next();
+        return;
+      }
+      try {
+        const indexFile = path.resolve(process.cwd(), 'index.html');
+        const rawHtml = fs.readFileSync(indexFile, 'utf8');
+        const withSeo = injectSeoMeta(rawHtml, req);
+        const transformed = await vite.transformIndexHtml(req.originalUrl, withSeo);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(transformed);
+      } catch (err) {
+        vite.ssrFixStacktrace(err as Error);
+        next(err);
+      }
+    });
+
     app.use(vite.middlewares);
   } else {
     const localDist = path.resolve(import.meta.dirname, 'dist');
     const distDir = fs.existsSync(localDist) ? localDist : path.resolve(process.cwd(), 'dist');
-    app.use(express.static(distDir));
-    app.get('*', (_req, res) => {
+    app.use(express.static(distDir, { index: false }));
+    app.get('*', (req, res) => {
       const indexHtml = path.join(distDir, 'index.html');
       if (fs.existsSync(indexHtml)) {
-        res.sendFile(indexHtml);
+        const rawHtml = fs.readFileSync(indexHtml, 'utf8');
+        res.status(200).type('text/html').send(injectSeoMeta(rawHtml, req));
       } else {
         res.status(404).send('Build output not found.');
       }
