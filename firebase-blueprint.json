@@ -1,0 +1,319 @@
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Public business contact, address, About Us, and FAQ settings managed by Admin.",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "tagline": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "address": { "type": "string", "minLength": 4, "maxLength": 300 },
+        "city": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "phonePrimary": { "type": "string", "minLength": 6, "maxLength": 40 },
+        "phoneEmergency": { "type": "string", "minLength": 3, "maxLength": 40 },
+        "whatsapp": { "type": "string", "minLength": 6, "maxLength": 40 },
+        "bkash": { "type": "string", "minLength": 6, "maxLength": 40 },
+        "addresses": { "type": "array" },
+        "email": { "type": "string", "format": "email", "maxLength": 120 },
+        "hours": { "type": "string", "minLength": 3, "maxLength": 150 },
+        "aboutTitle": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "aboutDescription": { "type": "string", "minLength": 10, "maxLength": 2500 },
+        "sleepLabNote": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["companyName", "address", "phonePrimary", "email", "updatedAt"]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Top slidebar promotional/informational banner managed strictly by Admin.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "subtitle": { "type": "string", "minLength": 2, "maxLength": 320 },
+        "ctaText": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "ctaTarget": { "type": "string", "enum": ["products", "sleep-test", "diseases", "hospitals", "appointments", "contact"] },
+        "imageUrl": { "type": "string", "minLength": 5, "maxLength": 500000 },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subtitle", "imageUrl", "order", "active", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Medical equipment catalog item sold by lifecircle.bd.",
+      "type": "object",
+      "properties": {
+        "nameBn": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "nameEn": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "category": { "type": "string", "enum": ["bp", "diabetes", "thermometer", "oxygen", "bipap", "cpap", "mask", "sleep-test"] },
+        "price": { "type": "number" },
+        "warranty": { "type": "string", "maxLength": 100 },
+        "inStock": { "type": "boolean" },
+        "descriptionBn": { "type": "string", "minLength": 5, "maxLength": 1500 },
+        "features": { "type": "array" },
+        "relatedDiseases": { "type": "array" },
+        "imageUrl": { "type": "string", "maxLength": 500000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nameBn", "nameEn", "category", "inStock", "descriptionBn", "updatedAt"]
+    },
+    "DiseaseGuide": {
+      "title": "DiseaseGuide",
+      "description": "Detailed medical condition guide with symptoms, immediate steps, and treatments.",
+      "type": "object",
+      "properties": {
+        "nameBn": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "nameEn": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "overviewBn": { "type": "string", "minLength": 10, "maxLength": 2000 },
+        "symptoms": { "type": "array" },
+        "immediateActions": { "type": "array" },
+        "treatmentBn": { "type": "string", "minLength": 5, "maxLength": 1500 },
+        "recommendedCategories": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nameBn", "nameEn", "overviewBn", "symptoms", "immediateActions", "treatmentBn", "updatedAt"]
+    },
+    "Hospital": {
+      "title": "Hospital",
+      "description": "Bangladesh Government or Autonomous hospital contact directory entry.",
+      "type": "object",
+      "properties": {
+        "nameBn": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "nameEn": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "type": { "type": "string", "enum": ["government", "autonomous"] },
+        "division": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "locationBn": { "type": "string", "minLength": 2, "maxLength": 250 },
+        "emergencyPhone": { "type": "string", "minLength": 3, "maxLength": 60 },
+        "generalPhone": { "type": "string", "maxLength": 60 },
+        "specialties": { "type": "string", "maxLength": 300 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nameBn", "nameEn", "type", "division", "locationBn", "emergencyPhone", "updatedAt"]
+    },
+    "FaqItem": {
+      "title": "FaqItem",
+      "description": "Frequently asked question entry.",
+      "type": "object",
+      "properties": {
+        "questionBn": { "type": "string", "minLength": 3, "maxLength": 300 },
+        "answerBn": { "type": "string", "minLength": 5, "maxLength": 1500 },
+        "category": { "type": "string", "maxLength": 60 },
+        "order": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["questionBn", "answerBn", "order", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user account profile containing PII (owner or admin read only).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 140 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "twoFactorEnabled": { "type": "boolean" },
+        "driveBackupEnabled": { "type": "boolean" },
+        "lastDriveSyncAt": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "twoFactorEnabled", "driveBackupEnabled", "createdAt", "updatedAt"]
+    },
+    "UserTwoFactor": {
+      "title": "UserTwoFactor",
+      "description": "Owner-only 2FA TOTP secret and backup recovery codes.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "secret": { "type": "string", "minLength": 16, "maxLength": 128 },
+        "enabled": { "type": "boolean" },
+        "backupCodes": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "secret", "enabled", "backupCodes", "updatedAt"]
+    },
+    "AdminRole": {
+      "title": "AdminRole",
+      "description": "Admin/staff role assignment for multi-user support.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 140 },
+        "name": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "staff"] },
+        "addedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "addedBy", "createdAt"]
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Online appointment booking for Sleep Test or medical device consultation.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "patientName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "phone": { "type": "string", "minLength": 6, "maxLength": 30 },
+        "email": { "type": "string", "maxLength": 140 },
+        "serviceType": { "type": "string", "enum": ["home-sleep-test", "clinic-sleep-test", "cpap-bipap-setup", "device-demo"] },
+        "preferredDate": { "type": "string", "minLength": 8, "maxLength": 20 },
+        "preferredSlot": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "address": { "type": "string", "minLength": 3, "maxLength": 300 },
+        "notes": { "type": "string", "maxLength": 600 },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "patientName", "phone", "serviceType", "preferredDate", "preferredSlot", "address", "status", "createdAt", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer medical equipment order.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "phone": { "type": "string", "minLength": 6, "maxLength": 30 },
+        "address": { "type": "string", "minLength": 4, "maxLength": 300 },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cod", "bkash", "card"] },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "shipped", "delivered", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "customerName", "phone", "address", "items", "totalAmount", "paymentMethod", "status", "createdAt", "updatedAt"]
+    },
+    "ChatThread": {
+      "title": "ChatThread",
+      "description": "Live human-to-human customer support chat thread (NO AI).",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "customerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 140 },
+        "lastMessage": { "type": "string", "maxLength": 500 },
+        "unreadByAdmin": { "type": "number" },
+        "unreadByUser": { "type": "number" },
+        "status": { "type": "string", "enum": ["open", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "customerName", "lastMessage", "status", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Individual live chat message in a support thread.",
+      "type": "object",
+      "properties": {
+        "threadOwnerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "senderUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "senderName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "senderRole": { "type": "string", "enum": ["customer", "admin"] },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["threadOwnerUid", "senderUid", "senderName", "senderRole", "text", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Real-time notification record for a specific user.",
+      "type": "object",
+      "properties": {
+        "recipientUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "type": { "type": "string", "enum": ["appointment", "order", "chat", "backup", "system"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recipientUid", "title", "message", "type", "read", "createdAt"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Customer feedback submission.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "rating": { "type": "number" },
+        "category": { "type": "string", "enum": ["product", "sleep-test", "support", "website"] },
+        "message": { "type": "string", "minLength": 3, "maxLength": 1500 },
+        "status": { "type": "string", "enum": ["new", "reviewed"] },
+        "adminReply": { "type": "string", "maxLength": 800 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "name", "rating", "category", "message", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/siteSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Business address, contact details, About Us, and clinic hours."
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Hero slidebar banners (Admin-only upload/edit/delete)."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Medical equipment catalog."
+    },
+    "/diseases/{diseaseId}": {
+      "schema": { "$ref": "#/entities/DiseaseGuide" },
+      "description": "Disease descriptions, symptoms, actions, and treatments."
+    },
+    "/hospitals/{hospitalId}": {
+      "schema": { "$ref": "#/entities/Hospital" },
+      "description": "Bangladesh Government & Autonomous hospitals directory."
+    },
+    "/faqs/{faqId}": {
+      "schema": { "$ref": "#/entities/FaqItem" },
+      "description": "Frequently asked questions."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminRole" },
+      "description": "Admin and support staff role registry."
+    },
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user account profiles with PII isolation."
+    },
+    "/users/{uid}/security/{secId}": {
+      "schema": { "$ref": "#/entities/UserTwoFactor" },
+      "description": "Owner-only 2FA TOTP configuration and backup codes."
+    },
+    "/appointments/{appointmentId}": {
+      "schema": { "$ref": "#/entities/Appointment" },
+      "description": "Sleep test and equipment consultation appointments."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Medical equipment orders."
+    },
+    "/chatThreads/{threadId}": {
+      "schema": { "$ref": "#/entities/ChatThread" },
+      "description": "Human-to-human customer support threads."
+    },
+    "/chatThreads/{threadId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Messages inside a live human support chat thread."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Real-time user notifications."
+    },
+    "/feedback/{feedbackId}": {
+      "schema": { "$ref": "#/entities/Feedback" },
+      "description": "Customer feedback submissions."
+    }
+  }
+}

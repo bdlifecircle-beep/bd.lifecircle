@@ -1,0 +1,6 @@
+{
+  "name": "lifecircle.bd",
+  "description": "বাংলাদেশের নির্ভরযোগ্য মেডিকেল যন্ত্রপাতি, স্লিপ টেস্ট, রোগ বিষয়ক নির্দেশিকা, সরকারি হাসপাতাল ডিরেক্টরি ও গুগল ড্রাইভ ব্যাকআপ সমৃদ্ধ স্বাস্থ্যসেবা প্ল্যাটফর্ম।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
