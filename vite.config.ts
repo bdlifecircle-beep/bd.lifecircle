@@ -22,7 +22,7 @@ export default defineConfig(() => {
           'pwa-192x192.png',
           'pwa-512x512.png',
           'pwa-maskable-512x512.png',
-          'assets/aistudio/lc_logo_0e7c6a28.png',
+          'lifecircle-logo.png',
         ],
         manifest: {
           id: '/',

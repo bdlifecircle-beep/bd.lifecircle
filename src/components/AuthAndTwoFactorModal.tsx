@@ -76,7 +76,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img
-              src="/assets/aistudio/lc_logo_0e7c6a28.png"
+              src="/lifecircle-logo.png"
               alt="lifecircle.bd"
               referrerPolicy="no-referrer"
               className="w-7 h-7 object-contain rounded bg-white p-0.5"
@@ -481,7 +481,7 @@ export const RegistrationNoticePopup: React.FC<RegistrationNoticePopupProps> = (
 
         <div className="flex items-center gap-3 pr-8">
           <img
-            src="/assets/aistudio/lc_logo_0e7c6a28.png"
+            src="/lifecircle-logo.png"
             alt="lifecircle.bd"
             referrerPolicy="no-referrer"
             className="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border border-slate-200 dark:border-slate-700"

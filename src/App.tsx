@@ -1499,7 +1499,7 @@ export default function App() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <img
-                src="/assets/aistudio/lc_logo_0e7c6a28.png"
+                src="/lifecircle-logo.png"
                 alt="lifecircle.bd"
                 referrerPolicy="no-referrer"
                 className="w-8 h-8 object-contain rounded bg-white p-0.5 border border-slate-200"

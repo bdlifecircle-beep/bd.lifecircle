@@ -34,7 +34,7 @@ export const AboutSection: React.FC<{ settings: SiteSettings }> = ({ settings })
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 space-y-6">
         <div className="flex items-center gap-3">
           <img
-            src="/assets/aistudio/lc_logo_0e7c6a28.png"
+            src="/lifecircle-logo.png"
             alt="lifecircle.bd লোগো"
             referrerPolicy="no-referrer"
             className="w-12 h-12 object-contain rounded-xl border border-slate-200 dark:border-slate-700 bg-white p-1"

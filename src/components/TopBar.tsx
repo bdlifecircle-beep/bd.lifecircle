@@ -55,7 +55,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-[#1D2B53] dark:text-white whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-[#2D89C8] rounded-md"
         >
           <img
-            src="/assets/aistudio/lc_logo_0e7c6a28.png"
+            src="/lifecircle-logo.png"
             alt="lifecircle.bd লোগো"
             referrerPolicy="no-referrer"
             className="w-8 h-8 object-contain rounded-md bg-white p-0.5 border border-slate-200 dark:border-slate-700"
